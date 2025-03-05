@@ -3,7 +3,7 @@ name: BTC Analysis Bot
 on:
   schedule:
     - cron: "0 23 * * *"  # Runs daily at 6:00 AM UTC+7 (23:00 UTC)
-  workflow_dispatch:  # Allows manual run
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
   run-btc-analysis:
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v3
         with:
-          python-version: 3.10  # ✅ Use a supported version
+          python-version: "3.10"  # ✅ Fix: Use a supported version (3.10 or 3.11)
 
       - name: Install Dependencies
         run: |
