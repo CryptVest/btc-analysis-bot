@@ -1,3 +1,10 @@
+name: BTC Analysis & Discord Alert
+
+on:
+  schedule:
+    - cron: "0 23 * * *"  # Runs daily at 6:00 AM UTC+7 (23:00 UTC)
+  workflow_dispatch:  # Allow manual trigger
+
 jobs:
   btc_analysis:
     runs-on: ubuntu-latest
@@ -11,13 +18,22 @@ jobs:
           python-version: '3.10'
 
       - name: Install dependencies
-        run: pip install pandas
+        run: pip install pandas requests
+
+      - name: Fetch BTC Data
+        run: python fetch_btc_data.py  # Ensure this script saves btc_hourly_prices.csv
 
       - name: Read & Log BTC Data
-        run: python debug_csv.py  # Logs CSV content
+        run: python debug_csv.py  # Logs CSV content for debugging
 
       - name: Run Analysis Script
-        run: python analyze_data.py  # Runs your DeepSeek analysis
+        run: python analyze_data.py  # Sends BTC data to DeepSeek for AI analysis
 
       - name: Send to Discord
-        run: python send_to_discord.py  # Sends results
+        run: python send_to_discord.py  # Sends results via Discord Webhook
+
+      - name: Upload CSV as Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: btc_data_log
+          path: btc_hourly_prices.csv
